@@ -2,12 +2,20 @@ from turtle import Turtle
 from context import Context
 
 def draw(turtle: Turtle, context: Context):
-    turtle.pencolor('black') 
+    drawable = context.resolution*0.75
 
     iteration = 4
     radius = 5
-    length = context.resolution / (2**iteration - 1)
+    length = drawable / (2**iteration - 1)
     size = length - radius
+
+    turtle.width(5)
+    turtle.pencolor('black') 
+    turtle.penup()
+    turtle.goto(-drawable/2, -drawable/2)
+    turtle.forward(radius)
+    turtle.pendown()
+
     operations = []
 
     hilbert(iteration=iteration, length=size, angle=90, radius=radius, operations=operations)
