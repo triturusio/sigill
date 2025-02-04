@@ -1,2 +1,7 @@
+[screen]
+size = 800
+delay = false
+
 [file]
 name = "test"
+resolution = 720
