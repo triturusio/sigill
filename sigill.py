@@ -2,12 +2,19 @@ import os
 import argparse
 import importlib
 import tomllib
-from turtle import Turtle
-from PIL import Image
 import pathlib
 import time
-from context import Context
 import fig
+from turtle import Turtle
+from PIL import Image
+
+class Context:
+    resolution = 0
+    name = ""
+
+    def __init__(self, resolution, name):
+        self.resolution = resolution
+        self.name = name
 
 def main():
     try: 
@@ -50,8 +57,8 @@ def export(turtle: Turtle, context: Context):
 
     fig.draw(turtle, context)
 
-    os.makedirs("./out", exist_ok = True)
-    file_name = f"./out/{context.name}_{context.resolution}x{context.resolution}"
+    os.makedirs("out", exist_ok = True)
+    file_name = f"out/{context.name}_{context.resolution}x{context.resolution}"
 
     turtle.screen.getcanvas().postscript(
         file = f"{file_name}.ps", 

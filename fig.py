@@ -1,24 +1,34 @@
 from turtle import Turtle
-from context import Context
+from sigill import Context
 
 def draw(turtle: Turtle, context: Context):
-    drawable = context.resolution*0.75
+    drawable = context.resolution*0.70
 
-    iteration = 4
-    radius = 5
+    iteration = 3
+    radius = 10
+    stroke = 10
     length = drawable / (2**iteration - 1)
     size = length - radius
 
-    turtle.width(5)
+    if iteration == 0:
+        return
+
+    turtle.width(stroke)
     turtle.pencolor('black') 
     turtle.penup()
     turtle.goto(-drawable/2, -drawable/2)
-    turtle.forward(radius)
+    if iteration % 2 == 0:
+        turtle.forward(radius)
     turtle.pendown()
 
     operations = []
 
     hilbert(iteration=iteration, length=size, angle=90, radius=radius, operations=operations)
+
+    if iteration % 2 == 1:
+        operations.pop(0)
+        operations.pop()
+        turtle.left(90)
 
     skip = False
     forward = 0
@@ -27,7 +37,7 @@ def draw(turtle: Turtle, context: Context):
         if skip:
             skip = False
             continue
-        if -operations[index][1] == operations[index+1][1] :
+        if index < len(operations)-1 and -operations[index][1] == operations[index+1][1] :
             skip = True
             continue
         if operations[index][0] > 0:
