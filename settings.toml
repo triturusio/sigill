@@ -1,7 +1,8 @@
 [screen]
 size = 800
-delay = false
+scale = 0.5
 
 [file]
-name = "test"
+name = "untitled"
 resolution = 1024
+scales = [0.5, 1, 2]

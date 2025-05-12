@@ -1,6 +1,7 @@
 import os
 import argparse
 import importlib
+import string
 import tomllib
 import pathlib
 import time
@@ -9,70 +10,81 @@ from turtle import Turtle
 from PIL import Image
 
 class Context:
-    resolution = 0
-    name = ""
+    resolution: int = 0
+    scale: float = 0
+    name: string  = ""
 
-    def __init__(self, resolution, name):
+    def __init__(self, resolution: int, name: string, scale: float):
         self.resolution = resolution
         self.name = name
+        self.scale = scale
 
 def main():
     try: 
+        parser = argparse.ArgumentParser( 
+            prog='Sigill', 
+            description='Render Options',
+            epilog='Found any issues? Please submit a bug report at [...]'
+        )
+        parser.add_argument('--export', action=argparse.BooleanOptionalAction)
+        args = parser.parse_args()
+
         with open("settings.toml", "rb") as file:
             settings = tomllib.load(file)
             file_name = settings["file"]["name"] 
             screen_size = settings["screen"]["size"]
-            resolution = settings["file"]["resolution"]
-            context = Context(resolution=resolution, name=file_name)
-
-            parser = argparse.ArgumentParser( 
-                prog='Sigill', 
-                description='Render Options',
-                epilog='Found any issues? Please submit a bug report at [...]'
-            )
-            parser.add_argument('--export', action=argparse.BooleanOptionalAction)
-            args = parser.parse_args()
 
             t = Turtle(visible=False)
             t.screen.setup(width=screen_size, height=screen_size)
             t.screen.title(file_name)
 
+            resolution = settings["file"]["resolution"]
+            
             if (args.export):
-                export(t, context)
+                scales = settings["file"]["scales"]
+                for scale in scales:
+                    export(
+                        turtle=t, 
+                        context=Context(resolution=resolution, name=file_name, scale=scale)
+                    )
+                    print(f"{scale}X complete")
             else:
-                render(t, context, timestamp=0)
+                scale = settings["screen"]["scale"]
+                render(
+                    turtle=t, 
+                    context=Context(resolution=resolution, name=file_name, scale=scale), timestamp=0)
+                t.screen.mainloop()
 
-            t.screen.mainloop()
     except Exception as e: 
         print("Error: ", e)
     
 def export(turtle: Turtle, context: Context):
+    turtle.reset()
     turtle.hideturtle()
     turtle.speed(0)
     turtle.pensize(1)
     turtle.penup()
-    turtle.goto(-context.resolution/2, -context.resolution/2)
+    turtle.goto(-context.scale*context.resolution/2, -context.scale*context.resolution/2)
     turtle.pendown()
     turtle.setheading(0)
 
     fig.draw(turtle, context)
-
     os.makedirs("out", exist_ok = True)
-    file_name = f"out/{context.name}_{context.resolution}x{context.resolution}"
+
+    file_name = f"out/{context.name}_{context.scale}X"
 
     turtle.screen.getcanvas().postscript(
         file = f"{file_name}.ps", 
-        x = -context.resolution/2, 
-        y = -context.resolution/2, 
-        height = context.resolution+1, 
-        width = context.resolution+1, 
+        x = -context.scale*context.resolution/2, 
+        y = -context.scale*context.resolution/2, 
+        height = context.scale*context.resolution+1, 
+        width = context.scale*context.resolution+1, 
         colormode = 'color'
     )
 
     psimage = Image.open(f"{file_name}.ps")
     psimage.save(f"{file_name}.png")
 
-    print("export complete")
 
 
 def render(turtle: Turtle, context: Context, timestamp):
@@ -85,12 +97,12 @@ def render(turtle: Turtle, context: Context, timestamp):
             turtle.hideturtle()
             turtle.pensize(1)
             turtle.penup()
-            turtle.goto(-context.resolution/2, -context.resolution/2)
+            turtle.goto(-context.resolution*context.scale/2, -context.resolution*context.scale/2)
             turtle.pendown()
             turtle.pencolor('red') 
             turtle.setheading(0)
             for _ in range(4): 
-                turtle.forward(context.resolution) 
+                turtle.forward(context.resolution*context.scale) 
                 turtle.right(-90) 
             fig.draw(turtle, context)
             time.sleep(1)
