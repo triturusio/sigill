@@ -11,9 +11,16 @@ from PIL import Image
 
 class Context:
     resolution: int = 0
+    """Figure resolution"""
+
     scale: float = 0
+    """Scale of any pixel value"""
+
     name: string  = ""
+    """Figure name"""
+
     show_guides: bool = False
+    """Guide not visible when exported"""
 
     def __init__(self, resolution: int, name: string, scale: float, show_guides: bool):
         self.resolution = resolution
@@ -97,8 +104,6 @@ def export(turtle: Turtle, context: Context):
 
     psimage = Image.open(f"{file_name}.ps")
     psimage.save(f"{file_name}.png")
-
-
 
 def render(turtle: Turtle, context: Context, timestamp):
     new_timestamp = pathlib.Path('fig.py').stat().st_mtime
