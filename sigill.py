@@ -13,11 +13,13 @@ class Context:
     resolution: int = 0
     scale: float = 0
     name: string  = ""
+    show_guides: bool = False
 
-    def __init__(self, resolution: int, name: string, scale: float):
+    def __init__(self, resolution: int, name: string, scale: float, show_guides: bool):
         self.resolution = resolution
         self.name = name
         self.scale = scale
+        self.show_guides = show_guides
 
 def main():
     try: 
@@ -45,14 +47,25 @@ def main():
                 for scale in scales:
                     export(
                         turtle=t, 
-                        context=Context(resolution=resolution, name=file_name, scale=scale)
+                        context=Context(
+                            resolution=resolution, 
+                            name=file_name, 
+                            scale=scale,
+                            show_guides=False
+                        )
                     )
                     print(f"{scale}X complete")
             else:
                 scale = settings["screen"]["scale"]
                 render(
                     turtle=t, 
-                    context=Context(resolution=resolution, name=file_name, scale=scale), timestamp=0)
+                    context=Context(
+                        resolution=resolution, 
+                        name=file_name, 
+                        scale=scale,
+                        show_guides=True
+                    ), 
+                    timestamp=0)
                 t.screen.mainloop()
 
     except Exception as e: 
