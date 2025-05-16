@@ -5,4 +5,4 @@ scale = 0.5
 [file]
 name = "untitled"
 resolution = 1024
-scales = [0.5, 1, 2]
+scales = [1, 2]

@@ -19,8 +19,8 @@ def draw(turtle: Turtle, context: Context):
         turtle.penup()
 
     # Adjustable parameters for the icon.
-    inner_stroke = 3*context.scale
-    outer_stroke = 10*context.scale
+    inner_stroke = 10*context.scale
+    outer_stroke = 20*context.scale
     length = safe_area_side_length/2
     count = 10 
     turtle.pencolor('black') 
