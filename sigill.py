@@ -91,7 +91,7 @@ def export(turtle: Turtle, context: Context):
     fig.draw(turtle, context)
     os.makedirs("out", exist_ok = True)
 
-    file_name = f"out/{context.name}_{context.scale}X"
+    file_name = f"out/{context.name}_{str(context.scale).replace(".", "")}X"
 
     turtle.screen.getcanvas().postscript(
         file = f"{file_name}.ps", 
