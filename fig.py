@@ -1,31 +1,80 @@
 from turtle import Turtle
 from sigill import Context
 
+# Change this method to draw your icon
 def draw(turtle: Turtle, context: Context):
-    drawable = context.resolution*context.scale*0.70
-    origin = (-drawable/2, -drawable/2)
-    circle_count = 10
+    safe_area_side_length = context.resolution*context.scale*0.75
 
-    radius = drawable/circle_count
-    stroke = 3*context.scale
-
-    turtle.width(stroke)
-    turtle.penup()
-    turtle.goto(x=origin[0], y=origin[1])
-
+    # Using guides to draw the safe area of the icon. These guide are not included in the export.
     if context.show_guides:
+        turtle.penup()
+        turtle.goto(x=-safe_area_side_length/2, y=-safe_area_side_length/2)
         turtle.pendown()
         turtle.pencolor('gray') 
+        turtle.width(1) 
         turtle.setheading(0)
         for _ in range(4): 
-            turtle.forward(drawable) 
+            turtle.forward(safe_area_side_length) 
             turtle.right(-90) 
+        turtle.penup()
 
+    # Adjustable parameters for the icon.
+    inner_stroke = 3*context.scale
+    outer_stroke = 10*context.scale
+    length = safe_area_side_length/2
+    count = 10 
     turtle.pencolor('black') 
 
-    for y in range(-1, circle_count):
-        for x in range(0, circle_count+1):
-            turtle.penup()
-            turtle.goto(x=origin[0]+radius*x, y=origin[1]+radius*y)
-            turtle.pendown()
-            turtle.circle(radius, steps=100)
+    # Draws outline.
+    turtle.width(outer_stroke)
+
+    turtle.penup()
+    turtle.goto(x=0, y=0)
+    turtle.setheading(180)
+    turtle.forward(length)
+    turtle.setheading(60)
+    turtle.pendown()
+    turtle.forward(length)
+
+    turtle.setheading(0)
+    turtle.forward(length)
+
+    turtle.setheading(-60)
+    turtle.forward(length)
+
+    turtle.setheading(-120)
+    turtle.forward(length)
+
+    turtle.setheading(180)
+    turtle.forward(length)
+
+    turtle.setheading(120)
+    turtle.forward(length)
+
+    # Draws inner lines.
+    turtle.width(inner_stroke)
+
+    for offset in range(0, count):
+        turtle.penup()
+        turtle.goto(x=0-length/count*offset, y=0)
+        turtle.setheading(60)
+        turtle.pendown()
+        turtle.forward(length)
+
+    for offset in range(0, count):
+        turtle.penup()
+        turtle.goto(0, 0)
+        turtle.setheading(-60)
+        turtle.forward(length/count*offset)
+        turtle.setheading(180)
+        turtle.pendown()
+        turtle.forward(length)
+
+    for offset in range(0, count):
+        turtle.penup()
+        turtle.goto(0, 0)
+        turtle.setheading(60)
+        turtle.forward(length/count*offset)
+        turtle.setheading(-60)
+        turtle.pendown()
+        turtle.forward(length)
